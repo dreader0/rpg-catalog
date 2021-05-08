@@ -1,5 +1,5 @@
 import React from 'react'
-import Card from './Card'
+import ItemCard from './ItemCard'
 
 const CardList = ({ items }) => {
   console.log(items);
@@ -7,7 +7,7 @@ const CardList = ({ items }) => {
     <div>
       {
         items.map((item) => {
-          return <Card
+          return <ItemCard
             key={item.index}
             item={item}
           />

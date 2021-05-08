@@ -1,7 +1,6 @@
 import React from 'react';
-import './css/Card.css'
 
-const Card = ({ item }) => {
+const ItemCard = ({ item }) => {
   // console.log(item)
   if (item !== {}) {
     return (
@@ -37,4 +36,4 @@ const Card = ({ item }) => {
 
 }
 
-export default Card;
+export default ItemCard;
