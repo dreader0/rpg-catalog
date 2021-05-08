@@ -24,20 +24,38 @@ class App extends React.Component {
     this.state = {
       items: [],
       searchfield: ''
-      }
+    }
+    this.armor = [];
+    this.weapons = [];
   }
 
-  componentDidMount() {
-    var that = this;
-    fetch('https://www.dnd5eapi.co/api/equipment-categories/armor')
-    .then(response => response.json())
-    .then(function (data) {
-      console.log("data", data);
-      let equipment = data.equipment;
-      that.setState({ items: equipment})
-    }).catch(function (error) {
-      console.error(error);
-    })
+  async componentDidMount() {
+    this.armor = await this.getEquipment('armor');
+    // this.weapons = await this.getEquipment('weapon');
+    this.setState({ items: this.armor.concat(this.weapons) })
+  }
+
+  async getEquipment(catURL) {
+    let equipment = [];
+    try {
+      let response = await fetch('https://www.dnd5eapi.co/api/equipment-categories/' + catURL);
+      if (response.ok) {
+        let responseJSON = await response.json();
+        let equipArray = responseJSON.equipment;
+        for (var i = 0; i < equipArray.length; i++) {
+          let item = await (await fetch('https://www.dnd5eapi.co' + equipArray[i].url)).json();
+          if (!item.url.includes('magic-items')) {
+            equipment.push(item);
+          }
+        }
+        // console.log(equipment);
+      } else {
+        throw new Error("category response.ok is false")
+      }
+    } catch (ex) {
+      console.error(ex);
+    }
+    return equipment;
   }
 
   onSearchChange = (event) => {
@@ -46,7 +64,7 @@ class App extends React.Component {
 
   render() {
     const { items } = this.state;
-    console.log(items)
+    // console.log(items)
     // const filteredItems = this.state.items.filter(item => {
     //   return item.name.toLowerCase().includes(searchfield.toLowerCase())
     // })
@@ -57,7 +75,7 @@ class App extends React.Component {
           <h1 className='f1'>Vanamar's</h1>
           <SearchBox searchChange={this.onSearchChange} />
           <Scroll>
-              <CardList items={items} />
+            <CardList items={items} />
           </Scroll>
         </div>
       );

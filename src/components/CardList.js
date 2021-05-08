@@ -2,16 +2,17 @@ import React from 'react'
 import Card from './Card'
 
 const CardList = ({ items }) => {
-  var promiseArr = items.map((item, i) => {
-    return <Card
-      key={i}
-      item={items[i]}
-    />
-  });
-  var cards = Promise.all(promiseArr);
+  console.log(items);
   return (
     <div>
-      {cards}
+      {
+        items.map((item) => {
+          return <Card
+            key={item.index}
+            item={item}
+          />
+        })
+      }
     </div>
   );
 }
